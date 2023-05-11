@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <h2>LEGO DATABASE</h2>
+        <link rel="stylesheet" type="text/css" href="../static/style.css" />
+    </head>
+    <body>
+        <form id="asdff">
+            <label for="Set name">Set Name</label>
+            <input type="text" name="set_name" value="{{ request.args.get('set_name','') }}"><br>
+            <label for="theme name">Theme Name</label>
+            <input type="text" name="theme_name" value="{{ request.args.get(theme_name,'') }}"><br>
+            <label for="part count range">Part Count Range</label>
+            <input type="number" id="min_part_count" name="min_part_count" min="0" placeholder="MIN" value="0">
+            <span>-</span>
+            <input type="number" id="max_part_count" name="max_part_count" placeholder="MAX" value="10000"><br>
+            <label for="results per page">Results Per Page</label>
+            <select id="limit" name="limit">
+                <option value="10" {% if request.args.get('limit','50') == '10' %} selected {% endif %}>10</option>
+                <option value="50" {% if request.args.get('limit','50') == '50' %} selected {% endif %}>50</option>
+                <option value="100" {% if request.args.get('limit','50') == '100' %} selected {% endif %}>100</option>
+            </select><br>                
+            <button type="submit">Search</button>
+        </form>
+        <h1>{{nums}} results</h1>
+        <table id="asdf">
+            <thead>
+              <tr>
+                <th><a href="{{ link }}&sort_by=set_num&sort_byp={{ request.args.get('sort_by','') }}">Set Num</a></th>
+                <th><a href="{{ link }}&sort_by=set_name&sort_byp={{ request.args.get('sort_by','') }}">Set Name</a></th>
+                <th><a href="{{ link }}&sort_by=theme_name&sort_byp={{ request.args.get('sort_by','') }}">Theme</a></th>
+                <th><a href="{{ link }}&sort_by=year&sort_byp={{ request.args.get('sort_by','') }}">Year</a></th>
+                <th><a href="{{ link }}&sort_by=part_count&sort_byp={{ request.args.get('sort_by','') }}">Part Count</a></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in rows %}
+              <tr>
+                <td>{{ row.set_num }}</td>
+                <td>{{ row.set_name }}</td>
+                <td>{{ row.theme_name }}</td>
+                <td>{{ row.year }}</td>
+                <td>{{ row.part_count }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <form id="fofrms">
+            <label for="offset">Page:</label>
+              {% for i in range(params|length - 1) %}
+              <input type="hidden" name="{{ names[i] }}" value="{{ params[i] }}">
+              {% endfor %}
+            <select id="offset" name="offset" onchange="this.form.submit()">
+              {% for i in range(1, pages + 1) %}
+              <option value="{{ i }}" {% if  params[params|length - 1] == i %} selected {% endif %} >{{ i }}</option>
+              {% endfor %}
+            </select>
+          </form>
+    </body>
+</html>
