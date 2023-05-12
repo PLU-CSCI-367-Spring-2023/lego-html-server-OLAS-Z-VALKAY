@@ -38,7 +38,7 @@ def fetch_sets():
 
     toffset = offset
     offset = (offset - 1) * limit if offset > 0 else 0
-    
+
     
     if sort_by == sort_byp:
         if sort_dir == 'asc':
@@ -47,13 +47,22 @@ def fetch_sets():
             sort_dir = 'asc'
     else:
         sort_dir = 'asc'
+
+    def arrow(name):
+        if request.args.get('sort_by','set_name') == name:
+            if request.args.get('sort_dir','asc') == 'asc':
+                return '▲' 
+            else:
+                return '▼'
+        else:
+            return ''
             
     params = [sort_dir, set_name, theme_name, min_part_count, max_part_count, limit,toffset]
     names = ["sort_dir","set_name","theme_name","min_part_count","max_part_count","limit"]
 
     link = f'http://127.0.0.1:5000/sets?set_name={set_name}&theme_name={theme_name}&min_part_count={min_part_count}&max_part_count={max_part_count}&limit={limit}&sort_dir={sort_dir}&offset={toffset}'
 
-    query = """select set.set_num as set_num, set.name as set_name, set.year as year, theme.name as theme_name, count(set.num_parts) as part_count
+    query = f"""select set.set_num as set_num, set.name as set_name, set.year as year, theme.name as theme_name, count(set.num_parts) as part_count
                 from set
                 join theme on set.theme_id= theme.id
                 join inventory on set.set_num = inventory.set_num 
@@ -61,14 +70,13 @@ def fetch_sets():
                 where set.name ilike %(set_name)s and theme.name ilike %(theme_name)s
                 group by set.set_num, set_name, year, theme.name
                 having count(set.num_parts) > %(min_part_count)s and count(set.num_parts) < %(max_part_count)s
+                order by {sort_by} {sort_dir}
                 """
     with conn.cursor() as cur:
-        cur.execute(f"""select * 
-                    from(
+        cur.execute(f"""
                         {query} limit %(limit)s 
                         offset %(offset)s
-                    ) as sub
-                    order by {sort_by} {sort_dir}""",
+                    """,
                     {
                     "set_name": f'%{set_name}%',
                     "theme_name": f"%{theme_name}%",
@@ -88,4 +96,4 @@ def fetch_sets():
                 })
         num = cur.fetchone()["num"]
     pages = num // limit + 1
-    return render_template("sets.html",rows=result,nums=num,link=link,pages=pages,params=params,names=names)
+    return render_template("sets.html",rows=result,nums=num,link=link,pages=pages,params=params,names=names,sort_by=sort_by)

@@ -26,11 +26,56 @@
         <table id="asdf">
             <thead>
               <tr>
-                <th><a href="{{ link }}&sort_by=set_num&sort_byp={{ request.args.get('sort_by','') }}">Set Num</a></th>
-                <th><a href="{{ link }}&sort_by=set_name&sort_byp={{ request.args.get('sort_by','') }}">Set Name</a></th>
-                <th><a href="{{ link }}&sort_by=theme_name&sort_byp={{ request.args.get('sort_by','') }}">Theme</a></th>
-                <th><a href="{{ link }}&sort_by=year&sort_byp={{ request.args.get('sort_by','') }}">Year</a></th>
-                <th><a href="{{ link }}&sort_by=part_count&sort_byp={{ request.args.get('sort_by','') }}">Part Count</a></th>
+                <th><a href="{{ link }}&sort_by=set_num&sort_byp={{ request.args.get('sort_by','') }}">
+                  Set Num
+                  {% if sort_by == 'set_num' %}
+                    {% if params[0] == 'asc' %}
+                      ▲ 
+                    {% else %}
+                      ▼
+                    {% endif %}
+                  {% endif %}
+                </a></th>
+                <th><a href="{{ link }}&sort_by=set_name&sort_byp={{ request.args.get('sort_by','') }}">
+                  Set Name 
+                  {% if sort_by == 'set_name' %}
+                    {% if params[0] == 'asc' %}
+                      ▲ 
+                    {% else %}
+                      ▼
+                    {% endif %}
+                  {% endif %}
+                </a></th>
+                <th><a href="{{ link }}&sort_by=theme_name&sort_byp={{ request.args.get('sort_by','') }}">
+                  Theme 
+                  {% if sort_by == 'theme_name' %}
+                    {% if params[0] == 'asc' %}
+                      ▲ 
+                    {% else %}
+                      ▼
+                    {% endif %}
+                  {% endif %}
+                </a></th>
+                <th><a href="{{ link }}&sort_by=year&sort_byp={{ request.args.get('sort_by','') }}">
+                  Year 
+                  {% if sort_by == 'year' %}
+                    {% if params[0] == 'asc' %}
+                      ▲ 
+                    {% else %}
+                      ▼
+                    {% endif %}
+                  {% endif %}
+                </a></th>
+                <th><a href="{{ link }}&sort_by=part_count&sort_byp={{ request.args.get('sort_by','') }}">
+                  Part Count 
+                  {% if sort_by == 'part_count' %}
+                    {% if params[0] == 'asc' %}
+                      ▲ 
+                    {% else %}
+                      ▼
+                    {% endif %}
+                  {% endif %}
+                </a></th>
               </tr>
             </thead>
             <tbody>
