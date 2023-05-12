@@ -30,11 +30,20 @@ def fetch_sets():
     set_name = request.args.get("set_name","")
     theme_name = request.args.get("theme_name","")
     min_part_count = request.args.get("min_part_count","0")
-    max_part_count = request.args.get("max_part_count","10000")
+    max_part_count = request.args.get("max_part_count","100000")
     limit = sanity(int(request.args.get("limit","50")),limits,50)
     sort_by = sanity(request.args.get("sort_by","set_name"),sorts,'set_name')
     offset = int(request.args.get("offset","0"))
     sort_byp = sanity(request.args.get("sort_byp",""),sorts,'')
+
+    if not isinstance(offset,int):
+        offset = 0
+
+    if not isinstance(min_part_count,int):
+        min_part_count = 0
+    
+    if not isinstance(max_part_count,int):
+        max_part_count = 100000
 
     toffset = offset
     offset = (offset - 1) * limit if offset > 0 else 0
